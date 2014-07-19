@@ -1,0 +1,239 @@
+package com.magus.library.utils;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.util.Log;
+
+/**
+ * @文件名 UnifiedFileUtils.java
+ * @创建人 岳美林
+ * @日期 2013-1-9
+ * @版本 V1.1.23
+ * @描述 为了统一项目处理的用户信息，将用户可操作的信息置于相同项目文件夹下
+ * @使用方法 不同方法的使用单独做描述
+ * */
+public class UnifiedFileUtils {
+	public final static String STR_SAME_PATH = "/magus/honeycomb/";
+
+	/**
+	 * 创建项目保存图片的文件夹系统，使用时需判断文件夹路径是否为空
+	 * 
+	 * @return 保存图片的文件夹路径
+	 */
+	public final static String getImagePath() {
+		try {
+			File sdcardDir = Environment.getExternalStorageDirectory();
+			String pathfile = sdcardDir.getPath() + STR_SAME_PATH + "image";
+			File filepath = new File(pathfile);
+			if (!filepath.exists()) {
+				filepath.mkdirs();
+			}
+			return pathfile;
+		} catch (Exception e) {
+			Log.e("图片路径异常", "获取图片路径异常！");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 创建项目保存图片的文件夹系统，使用时需判断文件是否为空
+	 * 
+	 * @return 保存图片的文件
+	 */
+	public final static File getImageFile() {
+		try {
+			File sdcardDir = Environment.getExternalStorageDirectory();
+			String pathfile = sdcardDir.getPath() + STR_SAME_PATH + "image";
+			File filepath = new File(pathfile);
+			if (!filepath.exists()) {
+				filepath.mkdirs();
+			}
+			return filepath;
+		} catch (Exception e) {
+			Log.e("图片File异常", "获取图片File异常！");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 创建项目保存文字信息的文件夹系统，使用时需判断文件夹路径是否为空
+	 * 
+	 * @return 保存文字信息的文件夹路径
+	 */
+	public final static String getTextPath() {
+		try {
+			File sdcardDir = Environment.getExternalStorageDirectory();
+			String pathfile = sdcardDir.getPath() + STR_SAME_PATH + "text";
+			File filepath = new File(pathfile);
+			if (!filepath.exists()) {
+				filepath.mkdirs();
+			}
+			return pathfile;
+		} catch (Exception e) {
+			Log.e("文档路径异常", "获取文档路径异常！");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 创建项目保存文字信息的文件夹系统，使用时需判断文件夹是否为空
+	 * 
+	 * @return 保存文字信息的文件夹
+	 */
+	public final static File getTextFile() {
+		try {
+			File sdcardDir = Environment.getExternalStorageDirectory();
+			String pathfile = sdcardDir.getPath() + STR_SAME_PATH + "text";
+			File filepath = new File(pathfile);
+			if (!filepath.exists()) {
+				filepath.mkdirs();
+			}
+			return filepath;
+		} catch (Exception e) {
+			Log.e("文档File异常", "获取文档File异常！");
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 获取当前应用的版本号
+	 * 
+	 * @param context
+	 *            当前Activity实例
+	 * @return 返回当前应用的版本号
+	 */
+	public final static String getAppVersionName(Context context) {
+		String versionName = "";
+		try {
+			PackageManager pm = context.getPackageManager();
+			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+			versionName = pi.versionName;
+			if (versionName == null || versionName.length() <= 0) {
+				return "";
+			}
+		} catch (Exception e) {
+			Log.e("获取版本号异常", "异常", e);
+		}
+		return versionName;
+	}
+
+	/**
+	 * 获取当前应用的安装包名
+	 * 
+	 * @param context
+	 *            当前Activity实例
+	 * @return 返回当前应用的安装包名
+	 */
+	public final static String getAppPackageName(Context context) {
+		String packageName = "";
+		try {
+			PackageManager pm = context.getPackageManager();
+			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+			ApplicationInfo appInfo = pi.applicationInfo;
+			packageName = appInfo.packageName;
+			if (packageName == null || packageName.length() <= 0) {
+				return "";
+			}
+		} catch (Exception e) {
+			Log.e("获取版本安装包名异常", "异常", e);
+		}
+		return packageName;
+	}
+
+	/**
+	 * 获取当前应用名
+	 * 
+	 * @param context
+	 *            当前Activity实例
+	 * @return 返回当前应用名
+	 */
+	public final static String getAppName(Context context) {
+		String appName = "";
+		try {
+			PackageManager pm = context.getPackageManager();
+			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+			ApplicationInfo appInfo = pi.applicationInfo;
+			appName = pm.getApplicationLabel(appInfo).toString();
+			if (appName == null || appName.length() <= 0) {
+				return "";
+			}
+		} catch (Exception e) {
+			Log.e("获取版本应用名异常", "异常", e);
+		}
+		return appName;
+	}
+
+	/**
+	 * 获取传入版本号对应的int类型如：1.2.0<——>{1, 2, 0}
+	 * 
+	 * @param codeName
+	 *            传入你需要获得的版本号
+	 * @return 返回int数组
+	 */
+	public final static int[] getVersionName(final String codeName) {
+		try {
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			int start = 0;
+			int tLength = codeName.length();
+			for (int i = 0; i < tLength; i++) {
+				char ch = codeName.charAt(i);
+				if (ch == '.') {
+					list.add(Integer.parseInt(codeName.substring(start, i)));
+					start = i + 1;
+				}
+			}
+			list.add(Integer.parseInt(codeName.substring(start, tLength)));
+			tLength = list.size();
+			int[] code = new int[tLength];
+			for (int i = 0; i < tLength; i++) {
+				code[i] = list.get(i);
+			}
+			return code;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 比较当前版本号是否比传入的版本号更高
+	 * 
+	 * @param thisCodeName
+	 *            传入需要比较的版本号
+	 * @param context
+	 *            传入Activity实例
+	 * @return 返回真假情况
+	 */
+	public final static boolean isGreaterThanThis(String thisCodeName,
+			Context context) {
+		int[] old = getVersionName(thisCodeName);
+		int[] now = getVersionName(getAppVersionName(context));
+		if (now == null || old == null) {
+			return false;
+		}
+		int tLength = now.length < old.length ? now.length : old.length;
+		for (int i = 0; i < tLength; i++) {
+			if (now[i] > old[i]) {
+				return true;
+			} else if (now[i] < old[i]) {
+				return false;
+			}
+			if (i == tLength - 1) {
+				if (now[i] == old[i]) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}
